@@ -20,12 +20,11 @@ variable "project_id" {
 
 variable "region" {
   description = "The region to deploy to"
-  default     = "us-east4"
+  default     = "us-central1"
 }
 
 variable "network" {
   description = "The GCP network to launch the instance in"
-  default     = "default"
 }
 
 variable "jenkins_instance_metadata" {
@@ -47,9 +46,4 @@ variable "jenkins_instance_zone" {
 variable "jenkins_workers_zone" {
   description = "The name of the zone into which to deploy Jenkins workers"
   default     = "us-east4-c"
-}
-
-variable "jenkins_network_project_id" {
-  description = "The project ID of the Jenkins network"
-  default     = ""
 }
