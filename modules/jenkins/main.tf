@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-provider "google" {
-  region  = var.region
-  version = "~> 2.12.0"
-}
 
 locals {
   artifact_bucket = "${var.project_id}-jenkins-artifacts"
@@ -52,7 +48,7 @@ data "google_compute_image" "jenkins_agent" {
 }
 
 module "jenkins-gce" {
-  source                                         = "..\/..\/..\/..\/Downloads\/terraform-google-jenkins-master"
+  source                                         = "../../"
   project_id                                     = var.project_id
   region                                         = var.region
   jenkins_instance_zone                          = var.jenkins_instance_zone
@@ -75,4 +71,3 @@ module "jenkins-gce" {
 
   jenkins_jobs = module.artifacts.jobs
 }
-
