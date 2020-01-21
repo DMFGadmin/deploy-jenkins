@@ -15,7 +15,7 @@ resource google_compute_firewall "allow-jenkins-access" {
     ports    = ["80"]
   }
   target_tags = [var.jenkins_access_source_tags]
-  source_ranges = ["38.30.16.106/32"]
+  source_ranges = ["${var.source_ranges}"]
 }
 
 resource "google_compute_instance" "jenkins-server" {
@@ -27,7 +27,7 @@ resource "google_compute_instance" "jenkins-server" {
 
   boot_disk {
     initialize_params {
-      image = "projects/afrl-jenkins-01/global/images/jenkins-image-for-deployment"
+      image = "projects/${var.project_id}/global/images/jenkins-image-for-deployment"
     }
   }
 

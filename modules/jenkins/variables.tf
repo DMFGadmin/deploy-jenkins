@@ -30,3 +30,7 @@ variable "jenkins_workers_zone" {
 variable "jenkins_access_source_tags" {
   description = "firewall tags to allow access to jenkins server"
 }
+
+variable "source_ranges" {
+  description = "source ranges for access to jenkins server"
+}
