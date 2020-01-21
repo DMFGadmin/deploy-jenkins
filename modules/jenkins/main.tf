@@ -1,73 +1,50 @@
-/**
- * Copyright 2018 Google LLC
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-
-locals {
-  artifact_bucket = "${var.project_id}-jenkins-artifacts"
+resource "google_compute_address" "jenkins-external-access" {
+  name    =  "jenkins-external-access-address"
+  address_type = "EXTERNAL"
+  description = "Used to access a Jenkins instance securely"
+  network_tier = "STANDARD"
+  region      = var.region
+  project     = var.project_id
 }
 
-module "artifacts" {
-  source = "../../modules/artifact_storage"
+resource google_compute_firewall "allow-jenkins-access" {
+  name    = "allow-access-to-jenkins"
+  network = var.network
+  allow {
+    protocol = "tcp"
+    ports    = ["80"]
+  }
+  target_tags = [var.jenkins_access_source_tags]
+  source_ranges = ["38.30.16.106/32"]
+}
 
-  project_id  = var.project_id
-  jobs_count  = 1
-  bucket_name = local.artifact_bucket
+resource "google_compute_instance" "jenkins-server" {
+  name         = "jenkins_server"
+  machine_type = "n1-standard-2"
+  zone         = "us-central1-a"
 
-  jobs = [
-    {
-      name = "testjob"
+  tags = ["foo", "bar"]
 
-      builders = [
-        <<EOF
-<hudson.tasks.Shell>
-  <command>echo &quot;hello world from testjob&quot;
-  env &gt; build-log.txt</command>
-</hudson.tasks.Shell>
-EOF
-      ]
+  boot_disk {
+    initialize_params {
+      image = "projects/afrl-jenkins-01/global/images/jenkins-image-for-deployment"
     }
-  ]
-}
+  }
 
-data "google_compute_image" "jenkins_agent" {
-  project = var.project_id
-  family  = "jenkins-agent"
-}
+  // Local SSD disk
+  scratch_disk {
+    interface = "SCSI"
+  }
 
-module "jenkins-gce" {
-  source                                         = "../../"
-  project_id                                     = var.project_id
-  region                                         = var.region
-  jenkins_instance_zone                          = var.jenkins_instance_zone
-  gcs_bucket                                     = local.artifact_bucket
-  jenkins_instance_network                       = var.network
-  jenkins_instance_subnetwork                    = var.subnetwork
-  jenkins_instance_additional_metadata           = var.jenkins_instance_metadata
-  jenkins_workers_region                         = var.region
-  jenkins_workers_project_id                     = var.project_id
-  jenkins_workers_zone                           = var.jenkins_workers_zone
-  jenkins_workers_machine_type                   = "n1-standard-1"
-  jenkins_workers_boot_disk_type                 = "pd-ssd"
-  jenkins_workers_network                        = var.network
-  jenkins_workers_network_tags                   = ["jenkins-agent"]
-  jenkins_workers_boot_disk_source_image         = data.google_compute_image.jenkins_agent.name
-  jenkins_workers_boot_disk_source_image_project = var.project_id
-  jenkins_service_account_name                   = "jenkins"
-  jenkins_service_account_display_name           = "Jenkins"
-  create_firewall_rules                          = true
+  network_interface {
+    subnetwork = "projects/afrl-jenkins-01/regions/us-central1/subnetworks/afrl-jenkins-subnet-01"
 
-  jenkins_jobs = module.artifacts.jobs
+    access_config {
+      // Ephemeral IP
+    }
+  }
+
+  service_account {
+    scopes = ["userinfo-email", "compute-ro", "storage-ro"]
+  }
 }
