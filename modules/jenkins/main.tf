@@ -42,7 +42,7 @@ resource "google_compute_instance" "jenkins-server" {
     subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
 
     access_config {
-      // Ephemeral IP
+      nat_ip = google_compute_address.jenkins-external-access.address
     }
   }
 
