@@ -25,6 +25,8 @@ resource "google_compute_instance" "jenkins-server" {
   machine_type = "n1-standard-2"
   tags = ["foo", "bar"]
 
+  zone = "us-central1-a"
+
   boot_disk {
     initialize_params {
       image = "projects/${var.project_id}/global/images/jenkins-image-for-deployment"
