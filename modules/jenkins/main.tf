@@ -9,7 +9,7 @@ resource "google_compute_address" "jenkins-external-access" {
 
 resource google_compute_firewall "allow-jenkins-external-access" {
   name    = "allow-access-to-jenkins"
-  network = projects/"${var.project_id}"/global/networks/"${var.network}"
+  network = "projects/${var.project_id}/global/networks/${var.network}"
   allow {
     protocol = "tcp"
     ports    = ["80"]
