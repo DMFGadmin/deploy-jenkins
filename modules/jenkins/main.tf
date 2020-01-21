@@ -20,7 +20,7 @@ resource google_compute_firewall "allow-jenkins-external-access" {
 }
 
 resource "google_compute_instance" "jenkins-server" {
-  name         = "jenkins_server"
+  name         = "jenkins-server-001"
   project = var.project_id
   machine_type = "n1-standard-2"
   tags = ["foo", "bar"]
