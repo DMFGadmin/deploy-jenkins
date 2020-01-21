@@ -4,4 +4,5 @@ module "deploy_jenkins" {
   project_id = var.project_id
   jenkins_access_source_tags = var.jenkins_access_source_tags
   source_ranges = var.source_ranges
+  subnetwork = var.subnetwork
 }
