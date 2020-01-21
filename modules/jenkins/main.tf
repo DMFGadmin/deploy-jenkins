@@ -10,6 +10,7 @@ resource "google_compute_address" "jenkins-external-access" {
 resource google_compute_firewall "allow-jenkins-external-access" {
   name    = "allow-access-to-jenkins"
   network = "projects/${var.project_id}/global/networks/${var.network}"
+  project = var.project_id
   allow {
     protocol = "tcp"
     ports    = ["80"]
@@ -22,8 +23,6 @@ resource "google_compute_instance" "jenkins-server" {
   name         = "jenkins_server"
   project = var.project_id
   machine_type = "n1-standard-2"
-  zone         = "us-central1-a"
-
   tags = ["foo", "bar"]
 
   boot_disk {
