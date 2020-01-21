@@ -30,13 +30,11 @@ resource "google_compute_instance" "jenkins-server" {
   boot_disk {
     initialize_params {
       image = "projects/${var.project_id}/global/images/jenkins-image-for-deployment"
+      size = 10
+      type  = "pd-standard"
     }
   }
 
-  // Local SSD disk
-  scratch_disk {
-    interface = "SCSI"
-  }
 
   network_interface {
     subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
