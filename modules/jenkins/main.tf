@@ -23,7 +23,7 @@ resource "google_compute_instance" "jenkins-server" {
   name         = "jenkins-server-001"
   project = var.project_id
   machine_type = "n1-standard-2"
-  tags = ["foo", "bar"]
+  tags = ["${var.jenkins_access_source_tags}", "bar"]
 
   zone = "us-central1-a"
 
