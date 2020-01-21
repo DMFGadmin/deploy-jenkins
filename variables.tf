@@ -19,7 +19,6 @@ variable "jenkins_instance_metadata" {
 
 variable "subnetwork" {
   description = "The GCP subnetwork to launch the instance in"
-  default     = "default"
 }
 
 variable "jenkins_access_source_tags" {
