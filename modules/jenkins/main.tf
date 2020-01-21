@@ -2,7 +2,7 @@ resource "google_compute_address" "jenkins-external-access" {
   name    =  "jenkins-external-access-address"
   address_type = "EXTERNAL"
   description = "Used to access a Jenkins instance securely"
-  network_tier = "STANDARD"
+  network_tier = "PREMIUM"
   region      = var.region
   project     = var.project_id
 }
