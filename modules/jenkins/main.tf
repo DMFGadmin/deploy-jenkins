@@ -7,9 +7,9 @@ resource "google_compute_address" "jenkins-external-access" {
   project     = var.project_id
 }
 
-resource google_compute_firewall "allow-jenkins-access" {
+resource google_compute_firewall "allow-jenkins-external-access" {
   name    = "allow-access-to-jenkins"
-  network = var.network
+  network = projects/"${var.project_id}"/global/networks/"${var.network}"
   allow {
     protocol = "tcp"
     ports    = ["80"]
@@ -20,6 +20,7 @@ resource google_compute_firewall "allow-jenkins-access" {
 
 resource "google_compute_instance" "jenkins-server" {
   name         = "jenkins_server"
+  project = var.project_id
   machine_type = "n1-standard-2"
   zone         = "us-central1-a"
 
@@ -37,7 +38,7 @@ resource "google_compute_instance" "jenkins-server" {
   }
 
   network_interface {
-    subnetwork = "projects/afrl-jenkins-01/regions/us-central1/subnetworks/afrl-jenkins-subnet-01"
+    subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
 
     access_config {
       // Ephemeral IP
