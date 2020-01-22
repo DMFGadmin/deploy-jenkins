@@ -13,7 +13,7 @@ resource google_compute_firewall "allow-jenkins-external-access" {
   project = var.project_id
   allow {
     protocol = "tcp"
-    ports    = ["80"]
+    ports    = ["8080"]
   }
   target_tags = [var.jenkins_access_source_tags]
   source_ranges = ["${var.source_ranges}"]
@@ -30,7 +30,7 @@ resource "google_compute_instance" "jenkins-server" {
   boot_disk {
     initialize_params {
       image = "projects/${var.project_id}/global/images/jenkins-ssl-image"
-      size = 10
+      size = 20
       type  = "pd-standard"
     }
   }
