@@ -13,10 +13,10 @@ resource google_compute_firewall "allow-jenkins-external-access" {
   project = var.project_id
   allow {
     protocol = "tcp"
-    ports    = ["8080"]
+    ports    = ["8443"]
   }
   target_tags = [var.jenkins_access_source_tags]
-  source_ranges = ["${var.source_ranges}"]
+  source_ranges = ["${var.source_range1}","${var.source_range2}"]
 }
 
 resource "google_compute_instance" "jenkins-server" {
