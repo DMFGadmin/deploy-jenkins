@@ -29,7 +29,7 @@ resource "google_compute_instance" "jenkins-server" {
 
   boot_disk {
     initialize_params {
-      image = "projects/${var.project_id}/global/images/jenkins-image-for-deployment"
+      image = "projects/${var.project_id}/global/images/jenkins-ssl-image"
       size = 10
       type  = "pd-standard"
     }
