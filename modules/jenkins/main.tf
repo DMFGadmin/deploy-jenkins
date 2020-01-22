@@ -25,7 +25,7 @@ resource "google_compute_instance" "jenkins-server" {
   machine_type = "n1-standard-2"
   tags = ["${var.jenkins_access_source_tags}", "bar"]
 
-  zone = "us-central1-a"
+  zone = var.zone
 
   boot_disk {
     initialize_params {

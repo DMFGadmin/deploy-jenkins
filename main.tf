@@ -5,4 +5,5 @@ module "deploy_jenkins" {
   jenkins_access_source_tags = var.jenkins_access_source_tags
   source_ranges = var.source_ranges
   subnetwork = var.subnetwork
+  zone      = var.zone
 }

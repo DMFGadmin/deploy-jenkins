@@ -23,3 +23,7 @@ variable "jenkins_access_source_tags" {
 variable "source_ranges" {
   description = "source ranges for access to jenkins server"
 }
+
+variable "zone" {
+  description = "what zone should this server be deployed in?"
+}
