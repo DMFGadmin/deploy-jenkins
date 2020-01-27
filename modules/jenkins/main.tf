@@ -3,7 +3,7 @@ data "terraform_remote_state" "project-and-networks" {
   config = {
     organization = "AFRLDigitalMFG"
     workspaces = {
-      name = "shared_vpc_projects"
+      name = "jenkins_standalone_project"
     }
   }
 }
