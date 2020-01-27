@@ -1,16 +1,26 @@
+data "terraform_remote_state" "project-and-networks" {
+  backend = "remote"
+  config = {
+    organization = "AFRLDigitalMFG"
+    workspaces = {
+      name = "shared_vpc_projects"
+    }
+  }
+}
+
 resource "google_compute_address" "jenkins-external-access" {
   name    =  "jenkins-external-access-address"
   address_type = "EXTERNAL"
   description = "Used to access a Jenkins instance securely"
   network_tier = "PREMIUM"
   region      = var.region
-  project     = var.project_id
+  project     = data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-id
 }
 
 resource google_compute_firewall "allow-jenkins-external-access" {
   name    = "allow-access-to-jenkins"
-  network = "projects/${var.project_id}/global/networks/${var.network}"
-  project = var.project_id
+  network = "projects/${data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-id}/global/networks/${data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-network-name}"
+  project = data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-id
   allow {
     protocol = "tcp"
     ports    = ["8443"]
@@ -21,7 +31,7 @@ resource google_compute_firewall "allow-jenkins-external-access" {
 
 resource "google_compute_instance" "jenkins-server" {
   name         = "jenkins-server-001"
-  project = var.project_id
+  project = data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-id
   machine_type = "n1-standard-2"
   tags = ["${var.jenkins_access_source_tags}", "bar"]
 
@@ -29,7 +39,7 @@ resource "google_compute_instance" "jenkins-server" {
 
   boot_disk {
     initialize_params {
-      image = "projects/${var.project_id}/global/images/jenkins-ssl-image"
+      image = "projects/${data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-id}/global/images/jenkins-ssl-image"
       size = 20
       type  = "pd-standard"
     }
@@ -37,7 +47,7 @@ resource "google_compute_instance" "jenkins-server" {
 
 
   network_interface {
-    subnetwork = "projects/${var.project_id}/regions/${var.region}/subnetworks/${var.subnetwork}"
+    subnetwork = "projects/${data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-id}/regions/${var.region}/subnetworks/${data.terraform_remote_state.project-and-networks.outputs.jenkins-standalone-project-subnetwork-name}"
 
     access_config {
       nat_ip = google_compute_address.jenkins-external-access.address
