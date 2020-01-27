@@ -4,4 +4,5 @@ module "deploy_jenkins" {
   source_range1 = var.source_range1
   source_range2 = var.source_range2
   zone      = var.zone
+  project_id = var.project_id
 }

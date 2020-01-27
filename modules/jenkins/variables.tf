@@ -18,3 +18,7 @@ variable "source_range2" {
 variable "zone" {
   description = "what zone should this server be deployed in?"
 }
+
+variable "project_id" {
+  description = "which project to deploy jenkins into"
+}
