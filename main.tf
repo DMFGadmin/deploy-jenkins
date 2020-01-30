@@ -5,4 +5,6 @@ module "deploy_jenkins" {
   source_range2 = var.source_range2
   zone      = var.zone
   project_id = var.project_id
+  iap_source_cidr = var.iap_source_cidr
+  iap_tags = var.iap_tags
 }

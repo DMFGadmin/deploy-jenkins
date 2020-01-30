@@ -22,3 +22,11 @@ variable "zone" {
 variable "project_id" {
   description = "which project to deploy jenkins into"
 }
+
+variable "iap_source_cidr" {
+  description = "which project to deploy jenkins into"
+}
+
+variable "iap_tags" {
+  description = "which project to deploy jenkins into"
+}
