@@ -42,7 +42,7 @@ resource google_compute_firewall "allow-iap-access" {
 }
 
 resource "google_compute_instance" "jenkins-server" {
-  name         = "-afrl-jenkins-server-001"
+  name         = "afrl-jenkins-server-001"
   project = var.project_id
   machine_type = "n1-standard-2"
   tags = ["${var.jenkins_access_source_tags}", "bar"]
